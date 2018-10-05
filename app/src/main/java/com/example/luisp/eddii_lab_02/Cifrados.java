@@ -58,12 +58,14 @@ public class Cifrados extends AppCompatActivity {
                 String key = number.getText().toString();
                 if(rbEnc.isChecked()){
                     ZigZag.Encryption(texto,Integer.parseInt(key));
+                    Termino();
                 }else if(rbDec.isChecked()){
                     ZigZag.Decryption(texto,Integer.parseInt(key));
+                    Termino();
                 }else{
                     Error();
                 }
-                    Termino();
+
 
             }
         });
