@@ -19,7 +19,7 @@ public class ZigZag {
 
         for (int i = 0;i < key; i++){
             for (int j = 0 ; j < length; j++){
-                mat [i][j] = '.';
+                mat [i][j] = '0';
             }
         }
 
@@ -49,7 +49,7 @@ public class ZigZag {
         for(int i = 0; i < key; i++){
             for(int j = 0; j < length; j++){
 
-                if(mat[i][j] != '.'){
+                if(mat[i][j] != '0'){
                     result += (mat[i][j]);
                 }
 
@@ -67,7 +67,7 @@ public class ZigZag {
 
         for (int i = 0;i < key; i++){
             for (int j = 0 ; j < length; j++){
-                mat [i][j] = '.';
+                mat [i][j] = '0';
             }
         }
 
@@ -100,7 +100,7 @@ public class ZigZag {
         for(int i = 0; i< key;i++){
             for(int j = 0; j < length; j++){
                 String temp = mat[i][j] + "";
-                if(temp.matches("\\.")){
+                if(temp.matches("0")){
                     //se salta en caso de .
                     continue;
                 }else{

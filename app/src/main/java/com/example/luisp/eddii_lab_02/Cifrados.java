@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -20,10 +22,12 @@ import java.io.InputStreamReader;
 public class Cifrados extends AppCompatActivity {
     private Button btnUpload;
     private Button btnInit;
+    private RadioButton rbEnc;
+    private RadioButton rbDec;
+    private EditText number;
 
     String texto = "";
     String Name = "";
-    Integer tamaño;
 
 
     @Override
@@ -33,6 +37,9 @@ public class Cifrados extends AppCompatActivity {
 
         btnUpload = (Button) findViewById(R.id.btnUpload);
         btnInit = (Button) findViewById(R.id.btnInit);
+        rbDec = (RadioButton) findViewById(R.id.rbDecrypt);
+        rbEnc = (RadioButton) findViewById(R.id.rbEncrypt);
+        number = (EditText) findViewById(R.id.txtKey);
 
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,15 +54,24 @@ public class Cifrados extends AppCompatActivity {
         btnInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                    ZigZag.Encryption("Hola mundo",3);
-                    ZigZag.Decryption("H doamnolu",3);
+                String ver  = texto;
+                String key = number.getText().toString();
+                if(rbEnc.isChecked()){
+                    ZigZag.Encryption(texto,Integer.parseInt(key));
+                }else if(rbDec.isChecked()){
+                    ZigZag.Decryption(texto,Integer.parseInt(key));
+                }else{
+                    Error();
+                }
                     Termino();
 
             }
         });
 
         RequestPermission();
+    }
+    public void Error(){
+        Toast.makeText(this,"Seleccione una de las dos opciones antes de cifrar / descifrar",Toast.LENGTH_LONG).show();
     }
     public void Termino(){
         Toast.makeText(this,"Proceso finalizado con exito",Toast.LENGTH_LONG).show();
@@ -105,7 +121,6 @@ public class Cifrados extends AppCompatActivity {
 
                 ReadText(selectedFile);
                 texto = ReadText(selectedFile);
-                tamaño =  texto.getBytes().length;
                 Name = selectedFile.getLastPathSegment();
 
 
