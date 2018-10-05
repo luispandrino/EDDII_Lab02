@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ZigZag {
-    int levels;
+
     private static boolean isCode = true;
 
     public static void Encryption(String aText, int aLevel){
@@ -79,7 +79,7 @@ public class ZigZag {
 
         int row = 0;
         int check = 0;
-
+        //agrego el texto encriptado en zig zag
         for(int i = 0 ; i < length; i++){
             if(check == 0){
                 mat[row][i] = aText.charAt(i);
@@ -121,6 +121,7 @@ public class ZigZag {
 
         check = 0;
         row = 0;
+        // recorro la matriz ya con las olas originales para devolver el texto original
         for (int i = 0; i < aText.length(); i++){
             if(check == 0){
                 decryptText  += mat[row][i];
