@@ -59,6 +59,89 @@ public class ZigZag {
         isCode = false;
     }
 
+    public static void Decryption(String aText, int aLevel){
+        int key = aLevel;
+        int length = aText.length();
+        char mat[][] = new char [key][length];
+        String result ="";
+
+        for (int i = 0;i < key; i++){
+            for (int j = 0 ; j < length; j++){
+                mat [i][j] = '.';
+            }
+        }
+
+        int row = 0;
+        int check = 0;
+
+        for(int i = 0 ; i < length; i++){
+            if(check == 0){
+                mat[row][i] = aText.charAt(i);
+                row++;
+                if(row == key){
+                    check = 1;
+                    row--;
+                }
+
+            }else if (check == 1){
+                row--;
+                mat[row][i] = aText.charAt(i);
+                if(row == 0){
+                    check = 0;
+                    row = 1;
+                }
+
+            }
+        }
+
+
+        //Cambio el orden de los rieles
+        int ordr = 0;
+        for(int i = 0; i< key;i++){
+            for(int j = 0; j < length; j++){
+                String temp = mat[i][j] + "";
+                if(temp.matches("\\.")){
+                    //se salta en caso de .
+                    continue;
+                }else{
+                    //agrego las letras una por una en diagonal
+                    mat[i][j] = aText.charAt(ordr);
+                    ordr++;
+                }
+            }
+        }
+
+        String decryptText = "";
+
+        check = 0;
+        row = 0;
+        for (int i = 0; i < aText.length(); i++){
+            if(check == 0){
+                decryptText  += mat[row][i];
+                row++;
+                if(row == key){
+                    check = 1;
+                    row--;
+                }
+
+            }else if (check == 1){
+                row--;
+                decryptText  += mat[row][i];
+                if(row == 0){
+                    check = 0;
+                    row = 1;
+                }
+
+            }
+
+        }
+
+        createFile(decryptText);
+
+
+
+    }
+
     private static void createFile(String Text){
         if(isCode){
             File nuevaCarpeta;

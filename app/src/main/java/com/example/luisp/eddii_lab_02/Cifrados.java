@@ -49,6 +49,7 @@ public class Cifrados extends AppCompatActivity {
             public void onClick(View v) {
 
                     ZigZag.Encryption("Hola mundo",3);
+                    ZigZag.Decryption("H doamnolu",3);
                     Termino();
 
             }
