@@ -16,21 +16,24 @@ public class ZigZag {
         int length = aText.length();
         char mat[][] = new char [key][length];
         String result ="";
+        char prueba = 0;
 
+        //creo la matriz llena de null
         for (int i = 0;i < key; i++){
             for (int j = 0 ; j < length; j++){
-                mat [i][j] = '0';
+                mat [i][j] = '\u0000';
             }
         }
-
 
         int row = 0;
         int check = 0;
 
+        //lleno la matriz con los caracteres en diagonal
         for(int i = 0 ; i < length; i++){
             if(check == 0){
                 mat[row][i] = aText.charAt(i);
                 row++;
+                //cuando row = key significa que llego al final de la diagonal
                 if(row == key){
                     check = 1;
                     row--;
@@ -39,6 +42,7 @@ public class ZigZag {
             }else if (check == 1){
                 row--;
                 mat[row][i] = aText.charAt(i);
+                //cuando row = 0 llego al inicio de la diagonal
                 if(row == 0){
                     check = 0;
                     row = 1;
@@ -48,14 +52,16 @@ public class ZigZag {
         }
         for(int i = 0; i < key; i++){
             for(int j = 0; j < length; j++){
-
-                if(mat[i][j] != '0'){
+                //creo la cadena encriptada ignorando los null en la matriz
+                if(mat[i][j] != '\u0000'){
                     result += (mat[i][j]);
                 }
 
             }
         }
+        //creo el archivo
         createFile(result);
+        //como el archivo encriptado ya fue creado pasa a ser falso
         isCode = false;
     }
 
@@ -67,7 +73,7 @@ public class ZigZag {
 
         for (int i = 0;i < key; i++){
             for (int j = 0 ; j < length; j++){
-                mat [i][j] = '0';
+                mat [i][j] = '\u0000';
             }
         }
 
@@ -95,13 +101,13 @@ public class ZigZag {
         }
 
 
-        //Cambio el orden de los rieles
+        //Cambio el orden de los rieles para obtener el zig zag original
         int ordr = 0;
         for(int i = 0; i< key;i++){
             for(int j = 0; j < length; j++){
                 String temp = mat[i][j] + "";
-                if(temp.matches("0")){
-                    //se salta en caso de .
+                if(temp.matches("\u0000")){
+                    //se salta en caso de  \u0000
                     continue;
                 }else{
                     //agrego las letras una por una en diagonal
@@ -135,7 +141,7 @@ public class ZigZag {
             }
 
         }
-
+        //creo el archivo de salida
         createFile(decryptText);
 
 
