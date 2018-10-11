@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondo"
     tools:context=".Cifrados">
 
     <Button
@@ -15,10 +16,11 @@
         android:layout_marginLeft="36dp"
         android:layout_marginRight="42dp"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="180dp"
         android:text="Subir Archivo"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,6 +36,7 @@
         android:layout_marginTop="1dp"
         app:layout_constraintBottom_toTopOf="@+id/btnInit"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtKey">
 
@@ -42,14 +45,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cifrar" />
+            android:text="Cifrar"
+            android:textColor="@android:color/background_light" />
 
         <RadioButton
             android:id="@+id/rbDecrypt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Descifrar" />
+            android:text="Descifrar"
+            android:textColor="@android:color/background_light" />
     </RadioGroup>
 
     <Button
@@ -65,6 +70,7 @@
         android:text="Iniciar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
@@ -78,17 +84,21 @@
         android:layout_marginRight="84dp"
         android:layout_marginStart="85dp"
         android:layout_marginTop="11dp"
+        android:backgroundTint="@color/colorPrimary"
         android:ems="10"
+        android:hint="Ingrese nivel"
         android:inputType="number"
+        android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="15dp"
+        android:layout_height="23dp"
         android:layout_marginBottom="25dp"
         android:layout_marginEnd="100dp"
         android:layout_marginLeft="101dp"
@@ -96,9 +106,31 @@
         android:layout_marginStart="101dp"
         android:layout_marginTop="27dp"
         android:text="Ingrese la cantidad de niveles"
+        android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/txtKey"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnUpload" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Zig-Zag"
+        android:textColor="@android:color/background_light"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btnUpload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.326" />
 
 </android.support.constraint.ConstraintLayout>
