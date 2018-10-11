@@ -57,8 +57,9 @@ public class Cifrados extends AppCompatActivity {
                 String ver  = texto;
                 String key = number.getText().toString();
                 if(rbEnc.isChecked()){
-                    ZigZag.Encryption(texto,Integer.parseInt(key));
-                    Termino();
+                    S_DES.Encryption();
+                   // ZigZag.Encryption(texto,Integer.parseInt(key));
+                    //Termino();
                 }else if(rbDec.isChecked()){
                     ZigZag.Decryption(texto,Integer.parseInt(key));
                     Termino();
