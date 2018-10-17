@@ -1,132 +1,206 @@
 package com.example.luisp.eddii_lab_02;
 
+import android.os.Environment;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.BitSet;
 
 public class S_DES {
-    //Declaración de variables
-    private static Byte S_box1 [][] = new Byte[4][4];
-    private static  Byte[][]  S_box2  = new Byte[4][4];
-    private static Byte MasterKey [] = new Byte[10];
 
+    //variables auxiliares
+    private static boolean isCode = true;
 
-    public static void Encryption(String Path){
+    /**
+     * Produce el texto cifrado
+     * @param msg texto plano
+     * @param key llave maestra
+     * @return texto Cifrado
+     */
+    public static void encrypt(String msg, int key) {
+        int[] keys = getKeys(key);
+        StringBuilder builder = new StringBuilder(msg.length());
+        for (int i = 0; i < msg.length(); i++)
+            builder.append((char)encrypt(msg.charAt(i), keys));
 
-
-        //------------------------ S-Box1
-        S_box1[0][0]= 01;
-        S_box1[0][1]= 00;
-        S_box1[0][2]= 11;
-        S_box1[0][3]= 10;
-        S_box1[1][0]= 11;
-        S_box1[1][1]= 10;
-        S_box1[1][2]= 01;
-        S_box1[1][3]= 00;
-        S_box1[2][0]= 00;
-        S_box1[2][1]= 10;
-        S_box1[2][2]= 01;
-        S_box1[2][3]= 11;
-        S_box1[3][0]= 11;
-        S_box1[3][1]= 01;
-        S_box1[3][2]= 11;
-        S_box1[3][3]= 10;
-
-
-        //----------S-Box2
-        S_box1[0][0]= 00;
-        S_box1[0][1]= 01;
-        S_box1[0][2]= 10;
-        S_box1[0][3]= 11;
-        S_box1[1][0]= 10;
-        S_box1[1][1]= 00;
-        S_box1[1][2]= 01;
-        S_box1[1][3]= 11;
-        S_box1[2][0]= 11;
-        S_box1[2][1]= 00;
-        S_box1[2][2]= 01;
-        S_box1[2][3]= 00;
-        S_box1[3][0]= 10;
-        S_box1[3][1]= 01;
-        S_box1[3][2]= 00;
-        S_box1[3][3]= 11;
-
-
-        File OriginalFile = new File(Path);
-            int BlockSize = 4*1024;
-            int interationNum;
-            if(OriginalFile.length() < BlockSize ){
-                interationNum = 1;
-            }else if (OriginalFile.length() % BlockSize == 0){
-                interationNum = (int)OriginalFile.length() / BlockSize;
-            }else{
-                interationNum = ((int)OriginalFile.length() / BlockSize) + 1;
-            }
-            while(interationNum-- >  0){
-                if(interationNum == 0){
-                    BlockSize = (int)OriginalFile.length() % BlockSize;
-                }
-
-                byte[] result = new byte[(int)OriginalFile.length()];
-                try {
-                    InputStream input = null;
-                    try {
-                        int totalBytesRead = 0;
-                        input = new BufferedInputStream(new FileInputStream(OriginalFile));
-                        while(totalBytesRead < result.length){
-                            //int bytesRemaining = result.length - totalBytesRead;
-                            int bytesRead = input.read(result, totalBytesRead, BlockSize);
-                            if (bytesRead > 0){
-                                totalBytesRead = totalBytesRead + bytesRead;
-                            }
-                        }
-
-                    }
-                    finally {
-
-                        input.close();
-                    }
-                }
-                catch (FileNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-                catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-                byte[] outPut = new byte[(int)result.length];
-                for (int i = 0; i < outPut.length ; i++){
-                    //escribo el descifrado por funcion
-                }
-
-
-
-
-
+        createFile(builder.toString());
+        isCode = false;
     }
 
-    //Convertidor de Bytes a Bits
 
 
-    public static void ObtainKey(String aKey){
-        int i = 0;
-        while(i < aKey.length()){
-            if(aKey.charAt(i) == '1'){
-                MasterKey[i] = 1;
-                i++;
-            }else{
-                MasterKey[i] = 0;
-                i++;
+    /**
+     * Produce el descifrado del String
+     * @param msg Texto cifrado
+     * @param key llave maestra
+     * @return texto descifrado
+     */
+    public static void decrypt(String msg, int key) {
+        int[] keys = getKeys(key);
+        StringBuilder builder = new StringBuilder(msg.length());
+        for (int i = 0; i < msg.length(); i++)
+            builder.append((char)decrypt(msg.charAt(i), keys));
+
+        createFile(builder.toString());
+    }
+
+   //metodo para encriptar por medio del Ascii leido
+    static int encrypt(int c, int[] keys) {
+        int result = f(IP(c), keys[0]);
+        // | Es un Or ya que estamos trabajando en binario
+        result = (result << 28) >>> 24 | (result >>> 4);
+        result = f(result, keys[1]);
+        return inverseIP(result);
+    }
+
+
+    //metodo para desencriptar por medio del Ascii leido
+    static int decrypt(int c, int[] keys) {
+        int[] newKeys = new int[2];
+        newKeys[0] = keys[1];
+        newKeys[1] = keys[0];
+        return encrypt(c, newKeys);
+    }
+
+
+    //Funcion Fk
+    static int f(int plainText, int subKey) {
+        int L = plainText >>> 4;
+        int R = plainText << 28 >>> 28;
+        return (L^F(R, subKey)) << 4 | R;
+    }
+
+
+    //Permutacion 10
+    static int P10(int key){
+        return permutate(key, 4,2,1,9,0,6,3,8,5,7);
+    }
+
+
+
+    static int LS(int key) {
+        return permutate(key, 4,0,1,2,3,9,5,6,7,8);
+    }
+
+
+    //Permutacion 8
+    static int P8(int key) {
+        return permutate(key, 1,0,5,2,6,3,7,4);
+    }
+
+
+    // genero K1 y K2
+    static int[] getKeys(int key) {
+        int[] result = new int[2];
+        int shifted = LS(P10(key));
+        result[0] = P8(shifted);
+        shifted = LS(shifted);
+        result[1] = P8(shifted);
+        return result;
+    }
+    //Permutacion inicial
+    static int IP(int plainText) {
+        return permutate(plainText, 1,3,0,4,7,5,2,6);
+    }
+    //Permutacion inversa
+    static int inverseIP(int cryptoText) {
+        return permutate(cryptoText, 2, 0, 6, 1, 3, 5, 7, 4);
+    }
+    //Utilizo la notacion... varargs en java en las permutaciones para solo mandarle las posiciones
+    static int permutate(int bits, int... pos) {
+        int permutatedBits = 0;
+        for(int i = 0; i < pos.length; i++)
+            permutatedBits |= ((bits >>> pos[i]) & 1) << i;
+        return permutatedBits;
+    }
+    //Funcion F
+    static int F(int plainText, int subKey) {
+        //Expandir y permutar
+        int permutation = permutate(plainText, 3,0,1,2,1,2,3,0);
+        //XOR BINARIO ^=
+        permutation ^= subKey;
+
+        //<< shift aritmetico
+        //>>> shift logico
+
+        int substituted = 0;
+        int i = ((permutation & (1 << 7)) >>> 6) | (permutation & (1 << 4)) >>> 4;
+        int j = ((permutation & (1 << 6)) >>> 5) | (permutation & (1 << 5)) >>> 5;
+        //obtengo el valor de la SBOX
+        substituted += S0[i][j] << 2;
+        i = ((permutation & (1 << 3)) >>> 2) | (permutation & 1);
+        j = ((permutation & (1 << 2)) >>> 1) | (permutation & (1 << 1)) >>> 1;
+        //Obtengo el valor de la SBOX
+        substituted += S1[i][j];
+        //Permutacion 4
+        return permutate(substituted, 3,1,0,2);
+    }
+
+
+    //SBOX 0
+    private final static int[][] S0 = new int[][] {
+            {1,0,3,2},
+            {3,2,1,0},
+            {0,2,1,3},
+            {3,1,3,1}
+    };
+
+    //SBOX 1
+    private final static int[][] S1 = new int[][] {
+            {1,1,2,3},
+            {2,0,1,3},
+            {3,0,1,0},
+            {2,1,0,3}
+    };
+
+
+    //Metodo para escribir el archivo
+    private static void createFile(String Text){
+        if(isCode){
+            File nuevaCarpeta;
+            nuevaCarpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) , "/MisCifrados");
+            if (!nuevaCarpeta.exists()){
+
+                nuevaCarpeta.mkdirs();
             }
+
+            File F = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/MisCifrados","code.txt");
+            BufferedWriter bw;
+            try {
+
+                FileWriter fw = new FileWriter(F);
+                bw = new BufferedWriter(fw);
+                bw.write(Text);
+                bw.close();
+
+            }catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
+        }else{
+            File F = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/MisCifrados","Decode.txt");
+            BufferedWriter bw;
+            try {
+                FileWriter fw = new FileWriter(F);
+                bw = new BufferedWriter(fw);
+                bw.write(Text);
+                bw.close();
+
+            }catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
         }
 
 
-
     }
-
-
 }
