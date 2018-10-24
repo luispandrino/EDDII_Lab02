@@ -2,6 +2,7 @@ package com.example.luisp.eddii_lab_02;
 
 
 import android.os.Environment;
+import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.Scanner;
 
 public class RSA {
     private BigInteger p;
@@ -29,33 +31,59 @@ public class RSA {
 
 
 
-    public RSA()
+    public RSA(int a , int b)
 
     {
 
-        r = new Random();
+        if (esPrimo(a) && esPrimo(b) ){
 
-        p = BigInteger.probablePrime(bitlength, r);
+            BigInteger tempQ = new BigInteger(""+ a);
+            BigInteger tempP = new BigInteger(""+ b);
 
-        q = BigInteger.probablePrime(bitlength, r);
+            q = tempQ;
+            p = tempP;
 
-        N = p.multiply(q);
+            N = p.multiply(q);
 
-        phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+            phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
-        e = BigInteger.probablePrime(bitlength / 2, r);
+            e = BigInteger.probablePrime(bitlength / 2, r);
 
-        while (phi.gcd(e).compareTo(BigInteger.ONE) > 0 && e.compareTo(phi) < 0)
+            while (phi.gcd(e).compareTo(BigInteger.ONE) > 0 && e.compareTo(phi) < 0)
 
-        {
+            {
 
-            e.add(BigInteger.ONE);
+                e.add(BigInteger.ONE);
 
+            }
+
+            d = e.modInverse(phi);
+        }else{
+            
         }
 
-        d = e.modInverse(phi);
 
     }
+
+    public boolean esPrimo(int numero){
+
+        Boolean primo = true;
+        if(numero<2)
+        {
+            primo = false;
+        }
+        else
+        {
+            for(int x=2; x*x<=numero; x++)
+            {
+                if( numero%x==0 ){primo = false;break;}
+            }
+        }
+        return primo;
+
+    }
+
+
 
 
     public RSA(BigInteger e, BigInteger d, BigInteger N)

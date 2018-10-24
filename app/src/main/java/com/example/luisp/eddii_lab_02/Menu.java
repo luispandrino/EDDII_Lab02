@@ -11,6 +11,7 @@ public class Menu extends AppCompatActivity {
 
     ImageButton btnZigZag;
     ImageButton btnSDES;
+    ImageButton btnRsa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +20,7 @@ public class Menu extends AppCompatActivity {
 
         btnZigZag = (ImageButton)findViewById(R.id.btnZigZag);
         btnSDES = (ImageButton)findViewById(R.id.btnSDES);
+        btnRsa = (ImageButton)findViewById(R.id.btnRsa);
 
         btnZigZag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +37,15 @@ public class Menu extends AppCompatActivity {
                 startActivity(btnSDES);
             }
         });
+        btnRsa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent btnRsa = new Intent(Menu.this, Cifrados_RSA.class);
+                startActivity(btnRsa);
+            }
+        });
+
+
 
 
     }

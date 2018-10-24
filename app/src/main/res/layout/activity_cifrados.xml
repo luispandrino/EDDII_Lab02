@@ -10,17 +10,17 @@
     <Button
         android:id="@+id/btnUpload"
         android:layout_width="306dp"
-        android:layout_height="54dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="27dp"
         android:layout_marginEnd="42dp"
         android:layout_marginLeft="36dp"
         android:layout_marginRight="42dp"
         android:layout_marginStart="36dp"
         android:layout_marginTop="180dp"
-        android:text="@string/subir_archivo"
+        android:text="subir archivo"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cifrar"
+            android:text="cifrar"
             android:textColor="@android:color/background_light" />
 
         <RadioButton
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/descifrar"
+            android:text="descifrar"
             android:textColor="@android:color/background_light" />
     </RadioGroup>
 
@@ -67,7 +67,7 @@
         android:layout_marginRight="39dp"
         android:layout_marginStart="39dp"
         android:layout_marginTop="27dp"
-        android:text="@string/iniciar"
+        android:text="iniciar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

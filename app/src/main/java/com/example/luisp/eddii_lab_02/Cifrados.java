@@ -31,7 +31,7 @@ public class Cifrados extends AppCompatActivity {
     private RadioButton rbEnc;
     private RadioButton rbDec;
     private EditText number;
-    RSA rsa = new RSA();
+
 
     String texto = "";
     String Name = "";
