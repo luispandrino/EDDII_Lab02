@@ -56,12 +56,26 @@ public class Cifrados extends AppCompatActivity {
             public void onClick(View v) {
                 String ver  = texto;
                 String key = number.getText().toString();
+
                 if(rbEnc.isChecked()){
-                    ZigZag.Encryption(texto,Integer.parseInt(key));
-                    Termino();
+                    if((key.contains("0") || key.contains("1")) && key.length() == 10){
+                        S_DES.encrypt(texto,Integer.parseInt(key));
+                        Termino();
+                    }else{
+                        Error();
+                    }
+
+                   // ZigZag.Encryption(texto,Integer.parseInt(key));
+                    //Termino();
                 }else if(rbDec.isChecked()){
-                    ZigZag.Decryption(texto,Integer.parseInt(key));
-                    Termino();
+                    if((key.contains("0") || key.contains("1")) && key.length() == 10) {
+                        S_DES.decrypt(texto, Integer.parseInt(key));
+                        Termino();
+                    }else{
+                        Error();
+                    }
+                   // ZigZag.Decryption(texto,Integer.parseInt(key));
+                   // Termino();
                 }else{
                     Error();
                 }
@@ -73,7 +87,7 @@ public class Cifrados extends AppCompatActivity {
         RequestPermission();
     }
     public void Error(){
-        Toast.makeText(this,"Seleccione una de las dos opciones antes de cifrar / descifrar",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Seleccione una de las dos opciones antes de cifrar / descifrar/ o verifque que la clave solo contenga 1 o 0 y sea de 10 digios",Toast.LENGTH_LONG).show();
     }
     public void Termino(){
         Toast.makeText(this,"Proceso finalizado con exito",Toast.LENGTH_LONG).show();
