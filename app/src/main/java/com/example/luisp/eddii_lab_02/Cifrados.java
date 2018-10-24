@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,11 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +31,7 @@ public class Cifrados extends AppCompatActivity {
     private RadioButton rbEnc;
     private RadioButton rbDec;
     private EditText number;
+    RSA rsa = new RSA();
 
     String texto = "";
     String Name = "";
@@ -61,7 +68,6 @@ public class Cifrados extends AppCompatActivity {
                     ZigZag.Encryption(texto,Integer.parseInt(key));
                     Termino();
                 }else if(rbDec.isChecked()){
-
                    ZigZag.Decryption(texto,Integer.parseInt(key));
                    Termino();
                 }else{
