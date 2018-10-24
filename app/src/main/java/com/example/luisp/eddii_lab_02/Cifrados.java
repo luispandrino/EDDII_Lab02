@@ -58,24 +58,12 @@ public class Cifrados extends AppCompatActivity {
                 String key = number.getText().toString();
 
                 if(rbEnc.isChecked()){
-                    if((key.contains("0") || key.contains("1")) && key.length() == 10){
-                        S_DES.encrypt(texto,Integer.parseInt(key));
-                        Termino();
-                    }else{
-                        Error();
-                    }
-
-                   // ZigZag.Encryption(texto,Integer.parseInt(key));
-                    //Termino();
+                    ZigZag.Encryption(texto,Integer.parseInt(key));
+                    Termino();
                 }else if(rbDec.isChecked()){
-                    if((key.contains("0") || key.contains("1")) && key.length() == 10) {
-                        S_DES.decrypt(texto, Integer.parseInt(key));
-                        Termino();
-                    }else{
-                        Error();
-                    }
-                   // ZigZag.Decryption(texto,Integer.parseInt(key));
-                   // Termino();
+
+                   ZigZag.Decryption(texto,Integer.parseInt(key));
+                   Termino();
                 }else{
                     Error();
                 }

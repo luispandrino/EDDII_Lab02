@@ -67,9 +67,6 @@ public class Cifrados_SDES extends AppCompatActivity {
                         }else{
                             Error();
                         }
-
-                        // ZigZag.Encryption(texto,Integer.parseInt(key));
-                        //Termino();
                     }else if(rbDec.isChecked()){
                         if((key.contains("0") || key.contains("1")) && key.length() == 10) {
                             S_DES.decrypt(texto, Integer.parseInt(key));
@@ -77,8 +74,6 @@ public class Cifrados_SDES extends AppCompatActivity {
                         }else{
                             Error();
                         }
-                        // ZigZag.Decryption(texto,Integer.parseInt(key));
-                        // Termino();
                     }else{
                         Error();
                     }
