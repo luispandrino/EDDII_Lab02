@@ -58,7 +58,7 @@ public class Cifrados_RSA extends AppCompatActivity {
 
                 RSA rsa = new RSA(Integer.parseInt(String.valueOf(txtq.getText())) , Integer.parseInt(String.valueOf(txtp.getText())));
                 if (!rsa.esPrimo(Integer.parseInt(String.valueOf(txtq.getText()))) || !rsa.esPrimo(Integer.parseInt(String.valueOf(txtp.getText())))){
-                    
+
                 }
             }
         });
