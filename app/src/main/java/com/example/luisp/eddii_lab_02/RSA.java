@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.BitSet;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -29,6 +30,8 @@ public class RSA {
 
     private Random r;
 
+    public  RSA() {}
+
 
 
     public RSA(int a , int b)
@@ -36,7 +39,7 @@ public class RSA {
     {
 
         if (esPrimo(a) && esPrimo(b) ){
-
+            r = new Random();
             BigInteger tempQ = new BigInteger(""+ a);
             BigInteger tempP = new BigInteger(""+ b);
 
@@ -47,23 +50,25 @@ public class RSA {
 
             phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
-            e = BigInteger.probablePrime(bitlength / 2, r);
+            e = BigInteger.valueOf(3L);
 
-            while (phi.gcd(e).compareTo(BigInteger.ONE) > 0 && e.compareTo(phi) < 0)
-
+            while (!phi .gcd(e).equals(BigInteger.ONE))
             {
 
-                e.add(BigInteger.ONE);
-
+                e = e.add(BigInteger.ONE);
             }
-
+            this.e = e;
             d = e.modInverse(phi);
+
+            LlavePriv();
+            LlavePub();
         }else{
-            
+
         }
 
 
     }
+
 
     public boolean esPrimo(int numero){
 
@@ -86,83 +91,103 @@ public class RSA {
 
 
 
-    public RSA(BigInteger e, BigInteger d, BigInteger N)
-
-    {
-
-        this.e = e;
-
-        this.d = d;
-
-        this.N = N;
-
-    }
-
-
-
-    @SuppressWarnings("deprecation")
-
-
-
-
-    public  String bytesToString(byte[] encrypted)
-
-    {
-
-        String test = "";
-
-        for (byte b : encrypted)
-
-        {
-
-            test += Byte.toString(b);
-
-        }
-
-        return test;
-
-    }
-
-
-
     // Encrypt message
 
-    public byte[] encrypt(byte[] message)
-
+    public BigInteger[] encrypt( String message,BigInteger userE,BigInteger userN)
     {
-        return (new BigInteger(message)).modPow(e, N).toByteArray();
+        int i ;
+        byte[] temp = new byte[1] ;
 
 
+        byte[] digits = message.getBytes() ;
+
+        BigInteger[] bigdigits = new BigInteger[digits.length] ;
+
+        for( i = 0 ; i < bigdigits.length ; i++ )
+        {
+            temp[0] = digits[i] ;
+            bigdigits[i] = new BigInteger( temp ) ;
+        }
+
+        BigInteger[] encrypted = new BigInteger[bigdigits.length] ;
+
+        for( i = 0 ; i < bigdigits.length ; i++ )
+            encrypted[i] = bigdigits[i].modPow( userE, userN ) ;
+
+
+        return( encrypted ) ;
     }
 
+    public String decrypt( BigInteger[] encrypted,BigInteger D,BigInteger N )
+    {
+        int i ;
 
 
+        BigInteger[] decrypted = new BigInteger[encrypted.length] ;
+
+        for( i = 0 ; i < decrypted.length ; i++ )
+            decrypted[i] = encrypted[i].modPow( D, N ) ;
+
+        char[] charArray = new char[decrypted.length] ;
+
+        for( i = 0 ; i < charArray.length ; i++ )
+            charArray[i] = (char) ( decrypted[i].intValue() ) ;
+
+
+        return( new String( charArray ) ) ;
+    }
     // Decrypt message
 
-    public byte[] decrypt(byte[] message)
-
-    {
-
-        return (new BigInteger(message)).modPow(d, N).toByteArray();
-
-    }
 
     public void createFile(String Text){
 
-            File F = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/MisCifrados","Decode.txt");
-            BufferedWriter bw;
-            try {
-                FileWriter fw = new FileWriter(F);
-                bw = new BufferedWriter(fw);
-                bw.write(Text);
-                bw.close();
+        File F = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/MisCifrados","Decode.txt");
+        BufferedWriter bw;
+        try {
+            FileWriter fw = new FileWriter(F);
+            bw = new BufferedWriter(fw);
+            bw.write(Text);
+            bw.close();
 
-            }catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-
-
+        }catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
 
 
+
+
+    }
+
+
+    public void LlavePub (){
+
+        File F = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/MisCifrados","PublicKey.txt");
+        BufferedWriter bw;
+        try {
+            FileWriter fw = new FileWriter(F);
+            bw = new BufferedWriter(fw);
+            String llave  =   N.toString() + "," + d.toString() ;
+            bw.write(llave);
+            bw.close();
+
+        }catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    public void LlavePriv (){
+
+        File F = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/MisCifrados","PrivateKey.txt");
+        BufferedWriter bw;
+        try {
+            FileWriter fw = new FileWriter(F);
+            bw = new BufferedWriter(fw);
+            String llave  =  N.toString() + "," + e.toString();
+            bw.write(llave);
+            bw.close();
+
+        }catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 }

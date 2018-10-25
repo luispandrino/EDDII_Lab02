@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,9 +15,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 
 
 public class Cifrados_RSA extends AppCompatActivity {
@@ -32,6 +37,12 @@ public class Cifrados_RSA extends AppCompatActivity {
     private Button btnDescifrar;
     String texto = "";
     String Name = "";
+    String aux ="";
+    String aux2 ="";
+    String[] llavepub = new String[2];
+    String[] llavepriv = new String[2];
+    boolean flagpub = true;
+    boolean flagpriv = false;
 
 
     @Override
@@ -57,14 +68,152 @@ public class Cifrados_RSA extends AppCompatActivity {
             public void onClick(View v) {
 
                 RSA rsa = new RSA(Integer.parseInt(String.valueOf(txtq.getText())) , Integer.parseInt(String.valueOf(txtp.getText())));
-                if (!rsa.esPrimo(Integer.parseInt(String.valueOf(txtq.getText()))) || !rsa.esPrimo(Integer.parseInt(String.valueOf(txtp.getText())))){
+                Termino();
 
-                }
             }
         });
 
+        btnPublickey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent()
+                        .addCategory(Intent.CATEGORY_OPENABLE)
+                        .setType("*/*")
+                        .setAction(Intent.ACTION_OPEN_DOCUMENT);
+                startActivityForResult(Intent.createChooser(intent,"Seleccione un Archivo"),123);
+            }
+        });
+
+        btnContenido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent()
+                        .addCategory(Intent.CATEGORY_OPENABLE)
+                        .setType("*/*")
+                        .setAction(Intent.ACTION_OPEN_DOCUMENT);
+                startActivityForResult(Intent.createChooser(intent,"Seleccione un Archivo"),123);
 
 
+            }
+        });
+
+        btnPrivatekey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent()
+                        .addCategory(Intent.CATEGORY_OPENABLE)
+                        .setType("*/*")
+                        .setAction(Intent.ACTION_OPEN_DOCUMENT);
+                startActivityForResult(Intent.createChooser(intent,"Seleccione un Archivo"),123);
+                flagpriv = true;
+            }
+        });
+        btnDescifrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                llavepriv = aux2.split(",");
+                int c = Integer.parseInt(llavepriv[0]);//n
+                int d = Integer.parseInt(llavepriv[1]);//d
+                BigInteger n = new BigInteger(""+ c);
+                BigInteger D = new BigInteger(""+ d);
+                String[] Encript = (texto.split(","));
+
+                BigInteger N;
+
+                int [] Auxiliar = new int[Encript.length];
+                for (int i = 0; i< Encript.length;i++){
+                    Auxiliar[i] = Integer.parseInt(Encript[i]);
+                }
+
+                BigInteger[] Cifrado = new BigInteger[Encript.length];
+
+
+
+                for(int i = 0; i < Encript.length; i++){
+                    Cifrado[i] = BigInteger.valueOf(Auxiliar[i]);
+                }
+
+
+                RSA rsa = new RSA();
+                //Decrypt
+                String Output = rsa.decrypt(Cifrado,D,n);
+
+                rsa.createFile(Output);
+                Termino();
+            }
+        });
+        btnContenidoDes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent()
+                        .addCategory(Intent.CATEGORY_OPENABLE)
+                        .setType("*/*")
+                        .setAction(Intent.ACTION_OPEN_DOCUMENT);
+                startActivityForResult(Intent.createChooser(intent,"Seleccione un Archivo"),123);
+
+
+            }
+        });
+        btnCifrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                llavepub = aux.split(",");
+
+                int a = Integer.parseInt(llavepub[0]);//n
+                int b = Integer.parseInt(llavepub[1]);//E
+
+                String teststring;
+                // encrypt
+                RSA rsa = new RSA();
+
+                BigInteger N = new BigInteger(""+ a);
+                BigInteger E = new BigInteger(""+ b);
+
+                BigInteger[] encrypted = rsa.encrypt(texto,E,N);
+                teststring = new String(encrypted.toString());
+                String cif[] = new String[encrypted.length];
+
+                for (int i = 0; i<encrypted.length;i++){
+                    cif[i]=encrypted[i].toString();
+                }
+                File nuevaCarpeta;
+                nuevaCarpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) , "/MisCifrados");
+                if (!nuevaCarpeta.exists()){
+
+                    nuevaCarpeta.mkdirs();
+                }
+                File F = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/MisCifrados","code.txt");
+                BufferedWriter bw;
+                try {
+                    FileWriter fw = new FileWriter(F);
+                    bw = new BufferedWriter(fw);
+                    for(int i = 0; i < encrypted.length;i++){
+                        bw.write(cif[i] + ",");
+                    }
+
+                    bw.close();
+
+                }catch (IOException ioe) {
+                    ioe.printStackTrace();
+                    Error();
+                }
+
+                flagpriv = true;
+                Termino();
+
+
+
+
+            }
+        });
+
+    }
+    public void Error(){
+        Toast.makeText(this,"Seleccione una de las dos opciones antes de cifrar / descifrar/ o verifque que la clave solo contenga 1 o 0 y sea de 10 digios",Toast.LENGTH_LONG).show();
+    }
+    public void Termino(){
+        Toast.makeText(this,"Proceso finalizado con exito",Toast.LENGTH_LONG).show();
     }
 
     public void RequestPermission(){
@@ -113,6 +262,14 @@ public class Cifrados_RSA extends AppCompatActivity {
                 ReadText(selectedFile);
                 texto = ReadText(selectedFile);
                 Name = selectedFile.getLastPathSegment();
+                if(flagpub){
+                    aux = ReadText(selectedFile);
+                }
+                if(flagpriv){
+                    aux2 = ReadText(selectedFile);
+                }
+                flagpub = false;
+                flagpriv = false;
 
 
             }catch (IOException e)
